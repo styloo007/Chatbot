@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - www.codingnepalweb.com -->
+<html lang="en" dir="ltr">
+<head>
+    <style>/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Chatbot container styles */
+.chatbot {
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Chatbot header styles */
+.chatbot header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.chatbot header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+/* Chatbox styles */
+.chatbox {
+    list-style-type: none;
+    padding: 10px;
+    overflow-y: scroll;
+    max-height: 250px;
+}
+
+/* Chatbox message styles */
+.chatbox .chat {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.chatbox .chat.incoming {
+    justify-content: flex-start;
+}
+
+.chatbox .chat.incoming p {
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-left: 10px;
+}
+
+.chatbox .chat.outgoing p {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-right: 10px;
+}
+
+/* Chat input styles */
+.chat-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.chat-input input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+
+.chat-input span {
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.chat-input span:hover {
+    background-color: #0056b3;
+}
+</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts Link For Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="chatbot">
+        <header>
+            <h2>Chatbot</h2>
+        </header>
+        <ul class="chatbox">
+            <li class="chat incoming">
+                <span class="material-symbols-outlined">smart_toy</span>
+                <p>Hi there 👋<br>How can I help you today?</p>
+            </li>
+        </ul>
+        <div class="chat-input">
+            <input id="user-input" type="text" placeholder="Enter a message...">
+            <span id="send-btn" class="material-symbols-rounded">send</span>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#send-btn").click(function() {
+                var user_input = $("#user-input").val();
+                $(".chatbox").append('<li class="chat outgoing"><span class="material-symbols-outlined">person</span><p>' + user_input + '</p></li>');
+                $(".chatbox").scrollTop($(".chatbox")[0].scrollHeight);
+
+                $.ajax({
+                    url: "/",
+                    type: "POST",
+                    data: {
+                        'user_input': user_input,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        var message = response.response;
+                        $(".chatbox").append('<li class="chat incoming"><span class="material-symbols-outlined">smart_toy</span><p>' + message + '</p></li>');
+                        $(".chatbox").scrollTop($(".chatbox")[0].scrollHeight);
+                    }
+                });
+                $("#user-input").val("");
+            });
+        });
+    </script>
+</body>
+</html>
