@@ -16,3 +16,11 @@ Model Architecture: Experiment with different neural network architectures and p
 
 Contributing
 Contributions are welcome! Feel free to submit bug reports, feature requests, or pull requests to help improve the project.
+
+
+```bash
+
+cd web
+
+python manage.py runserver
+
